@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="korIT.kiosk.mapper.MemberMapper">
+
+    <insert id="insertMember" parameterType="korIT.kiosk.dto.MemberDTO" useGeneratedKeys="true" keyProperty="id">
+        insert into member (shop, pwd, pwd_confirm) values(#{shop}, #{pwd}, #{pwd_confirm})
+    </insert>
+
+    <select id="findByMemberId" parameterType="_int" resultType="korIT.kiosk.dto.MemberDTO">
+        select * from member where id = #{id}
+    </select>
+
+    <select id="findByShop" parameterType="String" resultType="korIT.kiosk.dto.MemberDTO">
+        select * from member where shop = #{shop}
+    </select>
+
+    <select id="findMembers" resultType="korIT.kiosk.dto.MemberDTO">
+        select * from member
+    </select>
+
+</mapper>

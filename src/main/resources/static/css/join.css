@@ -1,0 +1,87 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+header {
+    width: 500px;
+    height: 100px;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 100px;
+    font-size: 25px;
+    font-weight: bold;
+}
+section {
+    width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+.container {
+    text-align: left;
+}
+article {
+    width: 500px;
+    height: 40px;
+    display: block;
+    margin: 15px 10px 0px 10px;
+    font-size: 20px;
+}
+
+input {
+    width: 460px;
+    border: none;
+    border-bottom: 2px solid grey;
+    font-size: 20px;
+}
+input:focus {
+    outline: none;
+}
+
+.join_input {
+    width: 460px;
+    margin-top: 0px;
+}
+.join_input_id, .join_input_id input{
+    width:370px;
+    display:inline-block;
+}
+
+.email {
+    margin-top: 0px;
+}
+.email input {
+    width: 240px;
+}
+
+select {
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.agree input {
+    width: 30px;
+    height: 16px;
+    margin: 10px;
+}
+
+button {
+    width: 460px;
+    height: 80px;
+    border: none;
+    border-radius: 45px;
+    color:white;
+    background-color: cornflowerblue;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+button.duplicateCheck{
+    width:80px;
+    height:40px;
+    border-radius:10px;
+    background-color:cornflowerblue;
+    display:inline-block;
+    color: white;
+    margin-bottom:20px;
+}
