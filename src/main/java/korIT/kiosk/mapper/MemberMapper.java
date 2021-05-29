@@ -16,4 +16,5 @@ public interface MemberMapper {
 
      List<MemberDTO> findMembers();
 
+     MemberDTO findByPwd(String pwd);
 }

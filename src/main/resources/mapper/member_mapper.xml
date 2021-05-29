@@ -21,4 +21,8 @@
         select * from member
     </select>
 
+    <select id="findByPwd" parameterType="korIT.kiosk.dto.MemberDTO" resultType="korIT.kiosk.dto.MemberDTO">
+        select * from member where pwd = #{pwd}
+    </select>
+
 </mapper>

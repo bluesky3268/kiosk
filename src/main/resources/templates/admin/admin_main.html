@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<a href="/admin/join">관리자 등록</a>
+<div class="logout">
+    <th:block th:unless="${#strings.isEmpty(session.shop)}">
+        <a id="logout" href="/admin/logout"><th:block th:text="${session.shop} + ' 로그아웃'"></th:block></a>
+    </th:block>
+</div>
+<div class="login">
+    <th:block th:if="${#strings.isEmpty(session.shop)}">
+        <a id="login" href="/admin/login">로그인</a>
+    </th:block>
+</div>
 
 </body>
 </html>
