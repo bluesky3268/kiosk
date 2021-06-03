@@ -16,16 +16,34 @@
         <div class="container">
             <article>가게이름</article>
             <div class="shopName">
-            <article class="join_input_id"><input type="text" id="shop" name="shop" placeholder="가게 이름 입력"></article>
+            <article class="join_input_id"><input type="text" id="username" name="username" placeholder="가게 이름 입력"></article>
             <button class="duplicateCheck" id="duplicate_check" type="button" onclick="check();">중복확인</button>
             <div id="checkShopName"></div>
 
             </div>
             <article>암호</article>
-            <article class="join_input"><input type="password" id="pwd" name="pwd" placeholder="암호 입력"></article>
+            <article class="join_input"><input type="password" id="password" name="password" placeholder="암호 입력"></article>
             <article>암호확인</article>
             <article class="join_input"><input type="password" id="pwd_confirm" name="pwd_confirm" placeholder="암호 확인" onkeyup="pwdCheck()"></article>
             <div id="checkPwd"></div>
+            <article>권한등급</article>
+            <article class="join_input">
+                <select id="role" name="role">
+                    <option value="supervisor">supervisor</option>
+                    <option value="manager" selected>manager</option>
+                </select>
+            </article>
+            <article>매장위치</article>
+            <article class="join_input">
+                <select id="location" name="location">
+                    <option value="A1" selected>A1</option>
+                    <option value="A2" >A2</option>
+                    <option value="A3">A3</option>
+                    <option value="B1" >B1</option>
+                    <option value="B2">B2</option>
+                    <option value="B3" >B3</option>
+                </select>
+            </article>
         </div>
 
         <br>
@@ -36,16 +54,17 @@
 <script type="text/javascript">
 //아이디 체크여부 확인 (아이디 중복일 경우 = 1 , 중복이 아닐경우 = 0 )
 function check() {
-    var shop = $("#shop").val();
+    var shop = $("#username").val();
+    var sendData = {"shop":shop}
 
     console.log("전송할 json = " + shop);
     $.ajax({
         async:true,
         type:'POST',
         url:'/admin/duplicateCheck',
+        data: JSON.stringify(sendData),
         dataType:'json',
         contentType:'application/json; charset=utf-8;',
-        data: {"shop":shop},
         success: function (data) {
             if (data == 1) {
                 console.log("이미 사용 중인 이름입니다.");
@@ -65,7 +84,7 @@ function check() {
 
 function pwdCheck() {
     var f1 = document.forms[0];
-    var pwd1 = f1.pwd.value;
+    var pwd1 = f1.password.value;
     var pwd2 = f1.pwd_confirm.value;
     if (pwd1 != pwd2) {
         document.getElementById('checkPwd').style.color="red";
@@ -78,14 +97,14 @@ function pwdCheck() {
 
 $(function (){
     $('#join_btn').click(function(){
-        var shopName = $('#shop').val();
+        var username = $('#username').val();
         var duplicateCheck = $('#duplicate_check').attr('check');
-        var pwd = $('#pwd').val();
+        var password = $('#password').val();
         var pwdConfirm = $('#pwd_confirm').val();
 
-        if(shopName == null || shopName == undefined || shopName == ""){
+        if(username == null || username == undefined || username == ""){
             alert('가게 이름을 입력해주세요.');
-            $('#shop').focus();
+            $('#username').focus();
             return false;
         }
         if(duplicateCheck == "" || duplicateCheck == 'N'){
@@ -93,9 +112,9 @@ $(function (){
             $('#duplicate_check').focus();
             return false;
         }
-        if (pwd == null || pwd == "" || pwd == undefined) {
+        if (password == null || password == "" || password == undefined) {
             alert('비밀번호를 입력해주세요.');
-            $('#pwd').focus();
+            $('#password').focus();
             return false;
         }
         if (pwdConfirm == null || pwdConfirm == "" || pwdConfirm == undefined) {
@@ -103,7 +122,7 @@ $(function (){
             $('#pwd_confirm').focus();
             return false;
         }
-        if(pwd != pwdConfirm){
+        if(password != pwdConfirm){
             alert('입력한 비밀번호가 같지 않습니다.');
             $('#pwd_confirm').focus();
             return false;

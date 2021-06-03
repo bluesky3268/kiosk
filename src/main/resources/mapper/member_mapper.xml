@@ -6,23 +6,22 @@
 <mapper namespace="korIT.kiosk.mapper.MemberMapper">
 
     <insert id="insertMember" parameterType="korIT.kiosk.dto.MemberDTO" useGeneratedKeys="true" keyProperty="id">
-        insert into member (shop, pwd, pwd_confirm) values(#{shop}, #{pwd}, #{pwd_confirm})
+        insert into member (username, password, role, reg_date) values(#{username}, #{password}, #{role}, #{reg_date})
     </insert>
 
     <select id="findByMemberId" parameterType="_int" resultType="korIT.kiosk.dto.MemberDTO">
-        select * from member where id = #{id}
+        select * from member where id=#{id}
     </select>
 
-    <select id="findByShop" parameterType="String" resultType="korIT.kiosk.dto.MemberDTO">
-        select * from member where shop = #{shop}
+    <select id="findByUsername" parameterType="String" resultType="korIT.kiosk.dto.MemberDTO">
+        select * from member where username=#{username}
     </select>
 
     <select id="findMembers" resultType="korIT.kiosk.dto.MemberDTO">
         select * from member
     </select>
 
-    <select id="findByPwd" parameterType="korIT.kiosk.dto.MemberDTO" resultType="korIT.kiosk.dto.MemberDTO">
-        select * from member where pwd = #{pwd}
-    </select>
+
+
 
 </mapper>

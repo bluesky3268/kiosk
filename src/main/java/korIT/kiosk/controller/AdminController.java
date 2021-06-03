@@ -1,18 +1,20 @@
 package korIT.kiosk.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import korIT.kiosk.dto.MemberDTO;
 import korIT.kiosk.dto.MemberLoginDTO;
 import korIT.kiosk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Member;
-import java.util.Map;
+
+import java.util.HashMap;
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -22,14 +24,15 @@ public class AdminController {
 
     private final MemberService memberService;
 
+
     @GetMapping("/main")
     public String main() {
-        return "admin/admin_main";
+        return "administration/admin_main";
     }
 
     @GetMapping("/join")
     public String join() {
-        return "admin/join";
+        return "administration/join";
     }
 
     @PostMapping("/join")
@@ -37,14 +40,15 @@ public class AdminController {
         log.info("[ memberDTO params : " + memberDTO + " ]");
         memberService.join(memberDTO);
         log.info("등록 성공");
-        return "/admin/login";
+        return "redirect:/admin/main";
     }
 
     @PostMapping(value = "/duplicateCheck")
     @ResponseBody
-    public String duplicateCheck(@RequestBody String shop) {
-        String shopName = shop.trim();
-        boolean duplicateCheck = memberService.duplicateShopCheck(shopName);
+    public String duplicateCheck(@RequestBody HashMap<String, Object> shop) {
+
+        String checkName = String.valueOf(shop.get("shop"));
+        boolean duplicateCheck = memberService.duplicateShopCheck(checkName);
         if (duplicateCheck) {
             // 아이디 사용가능
             log.info("아이디 사용가능");
@@ -56,38 +60,53 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "admin/login";
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "administration/loginForm";
     }
 
-    @PostMapping("/login")
-    public String login(MemberLoginDTO loginDTO, HttpSession session) {
-        log.info("[ params for login = " + loginDTO + " ]");
-
-        String login = memberService.login(loginDTO);
-        if (login.equals("0")) {
-            session.setAttribute("shop", loginDTO.getShop());
-            return "redirect:/admin/main";
-        } else if (login.equals("1")) {
-            return "/admin/login";
-        } else {
-            return "/admin/login";
-        }
-    }
+    //    @PostMapping("/login")
+//    public String login(MemberLoginDTO loginDTO, HttpSession session) {
+//        log.info("[ params for login = " + loginDTO + " ]");
+//
+//        String login = memberService.login(loginDTO);
+//        if (login.equals("0")) {
+//            session.setAttribute("username", loginDTO.getUsername());
+//            log.info("로그인 성공");
+//            return "redirect:/admin/main";
+//        } else if (login.equals("1")) {
+//            return "redirect:/admin/loginForm";
+//        } else {
+//            return "redirect:/admin/loginForm";
+//        }
+//    }
 
     @GetMapping("/logout")
-    public ModelAndView logout(HttpSession session, ModelAndView mv) {
+    public String logout(HttpSession session) {
         if (session != null) {
             session.invalidate();
-            mv.addObject("msg", "로그아웃되었습니다.");
-            mv.setViewName("redirect:/admin/login");
             log.info("로그아웃 성공");
-            return mv;
+            return "redirect:/admin/main";
         } else {
-            mv.addObject("msg", "로그인이 먼저 필요합니다.");
-            mv.setViewName("redirect:/admin/login");
-            return mv;
+            return "redirect:/admin/login";
         }
+    }
+
+    @GetMapping("/supervisor")
+    public String supervisor() {
+        return "administration/supervisor";
+    }
+
+    @GetMapping("/manager")
+    public String manager() {
+        return "administration/manager";
+    }
+
+    @GetMapping("/shopList")
+    public String shopList(Model model) {
+        List<MemberDTO> members = memberService.getMemberList();
+        model.addAttribute("members", members);
+        log.info("members : " + members);
+        return "administration/shopList";
     }
 }

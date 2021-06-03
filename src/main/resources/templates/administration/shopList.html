@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>매장목록</title>
+</head>
+<body>
+<table>
+  <thead>
+    <tr>
+      <th>가게로고</th>
+      <th>가게명</th>
+      <th>입점일자</th>
+      <th>위치</th>
+      <th>권한</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="members : ${members}">
+      <td>가게로고</td>
+      <td th:text="${members.username}">가게명</td>
+      <td th:text="${members.reg_date}">입점일자</td>
+      <td>위치</td>
+      <td th:text="${members.role}">권한</td>
+
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

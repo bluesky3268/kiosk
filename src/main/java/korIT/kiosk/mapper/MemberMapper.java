@@ -12,9 +12,8 @@ public interface MemberMapper {
 
      MemberDTO findByMemberId(int id);
 
-     MemberDTO findByShop(String shopName);
+     MemberDTO findByUsername(String username);
 
      List<MemberDTO> findMembers();
 
-     MemberDTO findByPwd(String pwd);
 }
