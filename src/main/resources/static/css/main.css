@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    width: 990px;
+    height: 170px;
+    border: 1px solid black;
+    display: inline-block;
+}
+
+.headerTitle {
+    font-size: 90px;
+    text-align: center;
+    padding: 15px 0;
+}
+
+nav {
+    width: 990px;
+    height: 110px;
+    border: 1px solid green;
+    text-align: center;
+    font-size: 0px;
+    display: inline-block;
+}
+
+ul {
+    list-style-type: none;
+    display: inline-block;
+    background-color: none;
+    padding-left: 10px;
+}
+
+a:link,
+a:visited {
+    padding: 20px 0px;
+    width: 200px;
+    font-size: 25px;
+    line-height: 60px;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    color: #5a5e61;
+}
+
+h3 a:link,
+h3 a:visited {
+    padding: 80px 0px;
+    width: 330px;
+    font-size: 50px;
+    line-height: 125px;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    color: #5a5e61;
+}
+
+li {
+    float: left;
+}
+
+section {
+    width: 992px;
+    height: 1000px;
+    border: 1px solid chocolate;
+    box-sizing: border-box;
+    float: left;
+}
+
+body {
+    text-align: center;
+    font-size: 0px;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 992px;
+    display: inline-block;
+    border: 1px solid red;
+    font-size: 0px;
+    box-sizing: border-box;
+}
+
+.sectionTitle {
+    text-align: left;
+    font-size: 24px;
+    padding: 20px 0;
+
+}
+
+article {
+    width: 330px;
+    height: 330px;
+    border: 1px solid rgb(54, 41, 54);
+    box-sizing: border-box;
+    float: left;
+    font-size: 16px;
+    text-align: left;
+}
+
+.h3Title {
+    text-align: center;
+    font-size: 20px;
+    padding: 15px 0;
+}
+
+footer {
+    width: 990px;
+    height: 200px;
+    border: 1px solid black;
+    display: inline-block;
+
+}
+
+.weather_widget {
+    width: 990px;
+    height: 200px;
+}
+
+.ordered_menu {
+    width: 180px;
+    height: 100px;
+    margin-top: 40px;
+    float: left;
+}
+
+.bill {
+    width: 420px;
+    height: 100px;
+    margin-top: 40px;
+    float: right;
+}
