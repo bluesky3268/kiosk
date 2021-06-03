@@ -25,6 +25,13 @@ public class MemberDTO{
     private String reg_date;
     private String img;
 
-
+    public MemberDTO(String username, String password, String pwd_confirm, String location, String role, String reg_date) {
+        this.username = username;
+        this.password = password;
+        this.pwd_confirm = pwd_confirm;
+        this.location = location;
+        this.role = role;
+        this.reg_date = reg_date;
+    }
 }
 
