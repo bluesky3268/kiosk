@@ -14,6 +14,8 @@ public interface MemberMapper {
 
      MemberDTO findByUsername(String username);
 
+     List<MemberDTO> findByRole(String role);
+
      List<MemberDTO> findMembers();
 
 }

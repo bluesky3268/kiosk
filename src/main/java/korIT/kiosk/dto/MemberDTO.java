@@ -25,7 +25,9 @@ public class MemberDTO{
     private String reg_date;
     private String img;
 
-    public MemberDTO(String username, String password, String pwd_confirm, String location, String role, String reg_date) {
+
+    //Test용 생성자
+    public MemberDTO(String username, String password, String pwd_confirm, String role, String reg_date) {
         this.username = username;
         this.password = password;
         this.pwd_confirm = pwd_confirm;

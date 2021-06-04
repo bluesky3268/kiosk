@@ -17,6 +17,10 @@
         select * from member where username=#{username}
     </select>
 
+    <select id="findByRole" parameterType="String" resultType="korIT.kiosk.dto.MemberDTO">
+        select * from member where role=#{role}
+    </select>
+
     <select id="findMembers" resultType="korIT.kiosk.dto.MemberDTO">
         select * from member
     </select>

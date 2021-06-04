@@ -98,6 +98,12 @@ public class MemberService implements UserDetailsService {
 
     }
 
+    public List<MemberDTO> findByRole(String role) {
+        List<MemberDTO> membersByRole = memberMapper.findByRole(role);
+        return membersByRole;
+    }
+
+
     // Security Session -> Authentication -> UserDetails(PrincipalDetails)
     // 값이 Authentication으로 리턴된다.
     // 그리고 Security session에는 Authentication이 저장된다.
@@ -115,4 +121,6 @@ public class MemberService implements UserDetailsService {
 
         return new User(member.getUsername(), member.getPassword(), authorities);
     }
+
+
 }

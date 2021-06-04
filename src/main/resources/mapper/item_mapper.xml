@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="korIT.kiosk.mapper.ItemMapper">
+
+    <insert id="insertItem" parameterType="korIT.kiosk.dto.ItemDTO" useGeneratedKeys="true" keyProperty="itemId">
+        insert into item (itemName, price, isSoldOut, itemImg, memberId) values(#{itemName}, #{price}, #{isSoldOut}, #{itemImg}, #{memberId})
+    </insert>
+
+    <select id="findByItemId" parameterType="_int" resultType="korIT.kiosk.dto.ItemDTO">
+        select itemName from item where itemId=#{itemId}
+    </select>
+
+    <select id="findByItemName" parameterType="String" resultType="korIT.kiosk.dto.ItemDTO">
+        select * from item where itemName=#{itemName}
+    </select>
+
+        <select id="findItemsByMemberId" parameterType="String" resultType="korIT.kiosk.dto.ItemDTO">
+            select * from item where member_id=#{memberId}
+        </select>
+
+    <select id="findItems" resultType="korIT.kiosk.dto.ItemDTO">
+        select * from item
+    </select>
+
+    <select id="checkSaleStatus" parameterType="_int" resultType="_int">
+        select isSoldOut from item where itemId=#{itemId}
+    </select>
+
+    <update id="changeToSoldOut" parameterType="_int">
+        update item set isSoldOut = 1
+    </update>
+
+    <update id="changeToForSale" parameterType="_int">
+        update item set isSoldOut = 0;
+    </update>
+
+
+
+
+</mapper>
