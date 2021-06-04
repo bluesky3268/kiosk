@@ -6,7 +6,7 @@
 <mapper namespace="korIT.kiosk.mapper.MemberMapper">
 
     <insert id="insertMember" parameterType="korIT.kiosk.dto.MemberDTO" useGeneratedKeys="true" keyProperty="id">
-        insert into member (username, password, role, reg_date) values(#{username}, #{password}, #{role}, #{reg_date})
+        insert into member (username, password, location, role, regDate, img) values(#{username}, #{password}, #{location}, #{role}, #{regDate}, #{img})
     </insert>
 
     <select id="findByMemberId" parameterType="_int" resultType="korIT.kiosk.dto.MemberDTO">

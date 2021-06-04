@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
@@ -28,24 +29,28 @@ public class AdminController {
 
     private final MemberService memberService;
 
+    // 관리자용 메인페이지
     @GetMapping("/main")
     public String main() {
         return "administration/admin_main";
     }
 
+    // 관리자 등록 폼 페이지
     @GetMapping("/join")
     public String join() {
         return "administration/join";
     }
 
+    // 관리자 등록
     @PostMapping("/join")
-    public String join(MemberDTO memberDTO) {
-        log.info("[ memberDTO params : " + memberDTO + " ]");
-        memberService.join(memberDTO);
+    public String join(MemberDTO memberDTO, @RequestParam("thumbImg")MultipartFile img) {
+        log.info("[ memberDTO params : " + memberDTO + " ]" + "imageFile : " + img);
+        memberService.join(memberDTO, img);
         log.info("등록 성공");
         return "redirect:/admin/main";
     }
 
+    // 관리자 등록시 중복이름 체크
     @PostMapping(value = "/duplicateCheck")
     @ResponseBody
     public String duplicateCheck(@RequestBody HashMap<String, Object> shop) {
@@ -63,6 +68,7 @@ public class AdminController {
         }
     }
 
+    //로그인 폼 페이지
     @GetMapping("/loginForm")
     public String loginForm() {
         return "administration/loginForm";
@@ -84,6 +90,7 @@ public class AdminController {
 //        }
 //    }
 
+    // 로그아웃
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         if (session != null) {
@@ -94,22 +101,25 @@ public class AdminController {
             return "redirect:/admin/login";
         }
     }
-
-    @GetMapping("/supervisor")
-    public String supervisor() {
-        return "administration/supervisor";
-    }
-
+    // 매장 매니저용 페이지
     @GetMapping("/manager")
     public String manager() {
         return "administration/manager";
     }
 
+    // 슈퍼바이저용 페이지
+    @GetMapping("/supervisor")
+    public String supervisor() {
+        return "administration/supervisor";
+    }
+
+    //
     @GetMapping("/shopList")
     public String shopList(Model model) {
-        List<MemberDTO> members = memberService.getMemberList();
-        model.addAttribute("members", members);
-        log.info("members : " + members);
+
+        List<MemberDTO> managerList = memberService.findByRole("ROLE_MANAGER");
+        model.addAttribute("managerList", managerList);
+        log.info("managerList : " + managerList);
         return "administration/shopList";
     }
 }

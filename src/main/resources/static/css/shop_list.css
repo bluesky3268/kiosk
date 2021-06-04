@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+table{
+    margin : 20px 20px;
+    border: 1px solid #454545;
+    border-collapse: collapse;
+    width:80%;
+}
+table tr, th, td{
+    border: 1px solid #454545;
+    padding: 10px;
+    text-align:center;
+}
+table thead th{
+    width: 30px;
+    height: 50px;
+
+}
+
+table img{
+    width:50px;
+    heigth:50px;
+    object-fit: cover;
+}
+

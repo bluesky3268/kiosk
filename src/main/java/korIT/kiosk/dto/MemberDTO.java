@@ -22,18 +22,17 @@ public class MemberDTO{
     private String pwd_confirm;
     private String location;
     private String role;
-    private String reg_date;
+    private String regDate;
     private String img;
 
 
     //Test용 생성자
-    public MemberDTO(String username, String password, String pwd_confirm, String role, String reg_date) {
+    public MemberDTO(String username, String password, String pwd_confirm, String role, String regDate) {
         this.username = username;
         this.password = password;
         this.pwd_confirm = pwd_confirm;
-        this.location = location;
         this.role = role;
-        this.reg_date = reg_date;
+        this.regDate = regDate;
     }
 }
 

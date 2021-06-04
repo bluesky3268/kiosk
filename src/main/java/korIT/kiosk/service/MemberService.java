@@ -14,13 +14,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.util.ObjectUtils.*;
 
@@ -31,6 +35,9 @@ public class MemberService implements UserDetailsService {
 
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
+
+    // 이미지 파일 업로드 디렉토리 설정
+    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
 
 
     // 가게 이름 중복 확인
@@ -43,19 +50,56 @@ public class MemberService implements UserDetailsService {
         return false;
     }
 
-    //회원가입
-    public void join(MemberDTO member) {
+    // 초기 슈퍼바이저 등록
+    public void joinInit(MemberDTO memberDTO) {
+
+        // 비밀번호 암호화
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+        // 권한 설정
+        if(memberDTO.getRole().equals("manager")){
+            memberDTO.setRole("ROLE_MANAGER");
+        }else{
+            memberDTO.setRole("ROLE_SUPERVISOR");
+        }
+        // 등록일자 설정
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String format = sdf.format(timestamp);
+        memberDTO.setRegDate(format);
+
+        log.info("join_memberDTO : " + memberDTO);
+        memberMapper.insertMember(memberDTO);
+    }
+
+    // 관리자 등록
+    public void join(MemberDTO member, MultipartFile img) {
+
+        // 이미지 파일 설정
+        String fileName = UUID.randomUUID().toString() + "."
+                + img.getOriginalFilename().substring(img.getOriginalFilename().indexOf(".") + 1);
+        log.info("img.getOriginalFilename : " + img.getOriginalFilename());
+        Path imgPath = Paths.get(uploadDir, fileName);
+        try {
+            Files.write(imgPath, img.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        member.setImg(fileName);
+
+
+        // 비밀번호 암호화
         member.setPassword(passwordEncoder.encode(member.getPassword()));
+        // 권한 설정
         if(member.getRole().equals("manager")){
             member.setRole("ROLE_MANAGER");
         }else{
             member.setRole("ROLE_SUPERVISOR");
         }
-
+        // 등록일자 설정
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String format = sdf.format(timestamp);
-        member.setReg_date(format);
+        member.setRegDate(format);
 
         log.info("join_memberDTO : " + member);
         memberMapper.insertMember(member);
@@ -117,7 +161,7 @@ public class MemberService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(member.getRole()));
 
-        log.info("login memeber _ role" + authorities);
+        log.info("login member _ role" + authorities);
 
         return new User(member.getUsername(), member.getPassword(), authorities);
     }
