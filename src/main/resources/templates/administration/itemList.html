@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/shop_list.css'>
     <title>상품 목록</title>
 </head>
 <body>
-상품 목록 페이지
+<table class="list">
+    가게명 <div th:text="${username}"></div>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>상품이름</th>
+        <th>사진</th>
+        <th>가격</th>
+        <th>상태</th>
+        <th>비고</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="itemList : ${itemList}">
+        <td th:text="${itemList.itemId}"></td>
+        <td th:text="${itemList.itemName}">위치</td>
+        <td><img th:src="@{/img/itemImg/}+${itemList.itemImg}"></td>
+        <td th:text="${itemList.price}">가격</td>
+        <td th:if="${itemList.isSoldOut.toString().equals('1')}">품절</td>
+        <td th:unless="${itemList.isSoldOut.toString().equals('1')}">판매가능</td>
+
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

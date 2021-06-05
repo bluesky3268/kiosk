@@ -56,6 +56,13 @@ public class ItemService {
         }
     }
 
+    // 가게별 상품 조회
+    public List<ItemDTO> findItemsByMemberId(String memberId) {
+        List<ItemDTO> itemList = itemMapper.findItemsByMemberId(memberId);
+        return itemList;
+    }
+
+
     public ItemDTO findByItemName(String itemName) {
         ItemDTO findItem = itemMapper.findByItemName(itemName);
         return findItem;

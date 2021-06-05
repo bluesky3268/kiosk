@@ -17,9 +17,9 @@
         select * from item where itemName=#{itemName}
     </select>
 
-        <select id="findItemsByMemberId" parameterType="String" resultType="korIT.kiosk.dto.ItemDTO">
-            select * from item where member_id=#{memberId}
-        </select>
+    <select id="findItemsByMemberId" parameterType="String" resultType="korIT.kiosk.dto.ItemDTO">
+        select * from item where memberId=#{memberId}
+    </select>
 
     <select id="findItems" resultType="korIT.kiosk.dto.ItemDTO">
         select * from item

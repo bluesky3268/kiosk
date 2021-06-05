@@ -14,7 +14,7 @@ public interface ItemMapper {
 
     ItemDTO findByItemName(String ItemName);
 
-//    List<ItemDTO> findItemsByMemberId(String memberId);
+    List<ItemDTO> findItemsByMemberId(String memberId);
 
     List<ItemDTO> findItems();
 

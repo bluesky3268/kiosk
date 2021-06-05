@@ -146,7 +146,17 @@ public class AdminController {
     }
 
     @GetMapping("/itemList")
-    public String itemList() {
+    public String itemList(Model model, HttpSession session) {
+
+        String username = (String) session.getAttribute("name");
+        MemberDTO findShop = memberService.findByUsername(username);
+        String findShopId = String.valueOf(findShop.getId());
+        List<ItemDTO> itemList = itemService.findItemsByMemberId(findShopId);
+
+        log.info("itemList : " + itemList);
+
+        model.addAttribute("username", username);
+        model.addAttribute("itemList", itemList);
         return "administration/itemList";
     }
 }
