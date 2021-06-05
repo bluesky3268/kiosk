@@ -28,8 +28,8 @@
         <td th:if="${itemList.isSoldOut.toString().equals('1')}">품절</td>
         <td th:unless="${itemList.isSoldOut.toString().equals('1')}">판매가능</td>
         <td>
-            <a href="#" th:href="@{/admin/itemEdit/{id} (id=${itemList.itemId})}">수정</a>
-            <a href="#" th:href="@{/admin/itemDelete/{id} (id=${itemList.itemId})}">삭제</a>
+            <a href="#" th:href="@{/admin/manager/itemEdit/{id} (id=${itemList.itemId})}">수정</a>
+            <a href="#" th:href="@{/admin/manager/itemDelete/{id} (id=${itemList.itemId})}">삭제</a>
         </td>
     </tr>
     </tbody>

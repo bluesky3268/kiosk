@@ -25,9 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/admin/supervisor", "/admin/shopList").access("hasRole('ROLE_SUPERVISOR')")
+                .antMatchers("/admin/supervisor", "/admin/join", "/admin/shopList").access("hasRole('ROLE_SUPERVISOR')")
                 .antMatchers("/admin/manager").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_SUPERVISOR')")
-                .antMatchers("/admin/main", "/admin/join", "/admin/loginForm").permitAll()
+                .antMatchers("/admin/main", "/admin/loginForm").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/admin/loginForm")

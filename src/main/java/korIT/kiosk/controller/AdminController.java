@@ -24,43 +24,14 @@ public class AdminController {
     private final MemberService memberService;
     private final ItemService itemService;
 
+    /**
+     * 메인페이지
+     */
+
     // 관리자용 메인페이지
     @GetMapping("/main")
     public String main() {
         return "administration/admin_main";
-    }
-
-    // 관리자 등록 폼 페이지
-    @GetMapping("/join")
-    public String join() {
-        return "administration/join";
-    }
-
-    // 관리자 등록
-    @PostMapping("/join")
-    public String join(MemberDTO memberDTO, @RequestParam("shopImg") MultipartFile img) {
-        log.info("[ memberDTO params : " + memberDTO + " ]" + "imageFile : " + img);
-        memberService.join(memberDTO, img);
-        log.info("등록 성공");
-        return "redirect:/admin/main";
-    }
-
-    // 관리자 등록시 중복이름 체크
-    @PostMapping("/duplicateCheck")
-    @ResponseBody
-    public String duplicateCheck(@RequestBody HashMap<String, Object> shop) {
-
-        String checkName = String.valueOf(shop.get("shop"));
-        boolean duplicateCheck = memberService.duplicateShopCheck(checkName);
-        if (duplicateCheck) {
-            // 아이디 사용가능
-            log.info("아이디 사용가능");
-            return "0";
-        } else {
-            // 중복된 아이디 있음
-            log.info("아이디 중복");
-            return "1";
-        }
     }
 
     //로그인 폼 페이지
@@ -97,37 +68,25 @@ public class AdminController {
         }
     }
 
+    /**
+     * 매장 매니저 사용 페이지들
+     */
+
     // 매장 매니저용 페이지
     @GetMapping("/manager")
     public String manager() {
         return "administration/manager";
     }
 
-    // 슈퍼바이저용 페이지
-    @GetMapping("/supervisor")
-    public String supervisor() {
-        return "administration/supervisor";
-    }
-
-    // 매장 목록
-    @GetMapping("/shopList")
-    public String shopList(Model model) {
-
-        List<MemberDTO> managerList = memberService.findByRole("ROLE_MANAGER");
-        model.addAttribute("managerList", managerList);
-        log.info("managerList : " + managerList);
-        return "administration/shopList";
-    }
-
     // 상품 등록
-    @GetMapping("/itemAddForm")
+    @GetMapping("/manager/itemAddForm")
     public String itemAddForm(HttpSession session, Model model) {
         String name = (String) session.getAttribute("name");
         model.addAttribute("name", name);
         return "administration/itemAdd";
     }
 
-    @PostMapping("/itemAdd")
+    @PostMapping("/manager/itemAdd")
     public String itemAdd(ItemDTO itemDTO, @RequestParam("item_img") MultipartFile img, HttpSession session) {
 
         log.info("params itemDTO : " + itemDTO);
@@ -146,7 +105,7 @@ public class AdminController {
     }
 
     // 상품 목록
-    @GetMapping("/itemList")
+    @GetMapping("/manager/itemList")
     public String itemList(Model model, HttpSession session) {
 
         String username = (String) session.getAttribute("name");
@@ -162,7 +121,7 @@ public class AdminController {
     }
 
     // 상품 수정
-    @GetMapping("/itemEdit/{id}")
+    @GetMapping("/manager/itemEdit/{id}")
     public String itemEdit(@PathVariable("id") int id, Model model, HttpSession session) {
         String username = (String) session.getAttribute("name");
         MemberDTO findShop = memberService.findByUsername(username);
@@ -177,7 +136,7 @@ public class AdminController {
         return "administration/itemEdit";
     }
 
-    @PostMapping("/itemEdit/{id}")
+    @PostMapping("/manager/itemEdit/{id}")
     public String itemEdit(@PathVariable("id") int id, ItemDTO item, MultipartFile img, HttpSession session) {
         String itemImg = (String)session.getAttribute("itemImg");
         if (img == null) {
@@ -194,10 +153,74 @@ public class AdminController {
         return "redirect:/admin/itemList";
     }
 
-    @GetMapping("/itemDelete/{id}")
+    @GetMapping("/manager/itemDelete/{id}")
     public String deleteItem(@PathVariable("id") int id) {
         itemService.deleteItem(id);
         return "redirect:/admin/itemList";
+    }
+
+
+    /**
+     * 푸드코트 슈퍼바이저 사용 페이지들
+     */
+    @GetMapping("/supervisor")
+    public String supervisor() {
+        return "administration/supervisor";
+    }
+
+    // 슈퍼바이저용 페이지
+    @GetMapping("/supervisor/manageShop")
+    public String manageShop_supervisor() {
+        return "administration/manageShop";
+    }
+
+    // 슈퍼바이저용 페이지
+    @GetMapping("/supervisor/manageItem")
+    public String manageItem_supervisor() {
+        return "administration/manageItem";
+    }
+
+    // 관리자 등록 폼 페이지
+    @GetMapping("/supervisor/join")
+    public String join() {
+        return "administration/join";
+    }
+
+    // 관리자 등록
+    @PostMapping("/supervisor/join")
+    public String join(MemberDTO memberDTO, @RequestParam("shopImg") MultipartFile img) {
+        log.info("[ memberDTO params : " + memberDTO + " ]" + "imageFile : " + img);
+        memberService.join(memberDTO, img);
+        log.info("등록 성공");
+        return "redirect:/admin/main";
+    }
+
+    // 관리자 등록시 중복이름 체크
+    @PostMapping("/duplicateCheck")
+    @ResponseBody
+    public String duplicateCheck(@RequestBody HashMap<String, Object> shop) {
+
+        String checkName = String.valueOf(shop.get("shop"));
+        boolean duplicateCheck = memberService.duplicateShopCheck(checkName);
+        if (duplicateCheck) {
+            // 아이디 사용가능
+            log.info("아이디 사용가능");
+            return "0";
+        } else {
+            // 중복된 아이디 있음
+            log.info("아이디 중복");
+            return "1";
+        }
+    }
+
+    // 매장 목록
+    @GetMapping("/supervisor/shopList")
+    public String shopList(Model model) {
+
+        List<MemberDTO> managerList = memberService.findByRole("ROLE_MANAGER");
+        model.addAttribute("managerList", managerList);
+        log.info("managerList : " + managerList);
+        return "administration/shopList";
     }
 
 }
