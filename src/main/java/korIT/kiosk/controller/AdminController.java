@@ -122,7 +122,7 @@ public class AdminController {
     // 상품 등록
     @GetMapping("/itemAddForm")
     public String itemAddForm(HttpSession session, Model model) {
-        String name = (String)session.getAttribute("name");
+        String name = (String) session.getAttribute("name");
         model.addAttribute("name", name);
         return "administration/itemAdd";
     }
@@ -133,7 +133,7 @@ public class AdminController {
         log.info("params itemDTO : " + itemDTO);
         log.info("MultipartFile : " + img);
 
-        String name = (String)session.getAttribute("name");
+        String name = (String) session.getAttribute("name");
         MemberDTO findMember = memberService.findByUsername(name);
         int id = findMember.getId();
         itemDTO.setMemberId(id);
@@ -145,6 +145,7 @@ public class AdminController {
         return "redirect:/admin/itemList";
     }
 
+    // 상품 목록
     @GetMapping("/itemList")
     public String itemList(Model model, HttpSession session) {
 
@@ -159,4 +160,44 @@ public class AdminController {
         model.addAttribute("itemList", itemList);
         return "administration/itemList";
     }
+
+    // 상품 수정
+    @GetMapping("/itemEdit/{id}")
+    public String itemEdit(@PathVariable("id") int id, Model model, HttpSession session) {
+        String username = (String) session.getAttribute("name");
+        MemberDTO findShop = memberService.findByUsername(username);
+
+        ItemDTO findItem = itemService.findByItemId(id);
+
+        log.info("findItem : " + findItem);
+
+        session.setAttribute("itemImg", findItem.getItemImg());
+        model.addAttribute("username", username);
+        model.addAttribute("item", findItem);
+        return "administration/itemEdit";
+    }
+
+    @PostMapping("/itemEdit/{id}")
+    public String itemEdit(@PathVariable("id") int id, ItemDTO item, MultipartFile img, HttpSession session) {
+        String itemImg = (String)session.getAttribute("itemImg");
+        if (img == null) {
+            item.setItemImg(itemImg);
+        }
+
+        String username = (String) session.getAttribute("name");
+        MemberDTO findShop = memberService.findByUsername(username);
+        item.setMemberId(findShop.getId());
+
+        item.setItemId(id);
+
+        itemService.updateItem(item, img);
+        return "redirect:/admin/itemList";
+    }
+
+    @GetMapping("/itemDelete/{id}")
+    public String deleteItem(@PathVariable("id") int id) {
+        itemService.deleteItem(id);
+        return "redirect:/admin/itemList";
+    }
+
 }

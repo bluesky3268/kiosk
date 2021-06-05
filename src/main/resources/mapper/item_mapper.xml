@@ -9,8 +9,16 @@
         insert into item (itemName, price, isSoldOut, itemImg, memberId) values(#{itemName}, #{price}, #{isSoldOut}, #{itemImg}, #{memberId})
     </insert>
 
+    <update id="updateItem" parameterType="korIT.kiosk.dto.ItemDTO">
+        update item set itemName=#{itemName}, price=#{price}, itemImg=#{itemImg}, isSoldOut=#{isSoldOut} where itemid=#{itemId}
+    </update>
+
+    <delete id="deleteItem" parameterType="_int">
+        delete from item where itemId=#{itemId}
+    </delete>
+
     <select id="findByItemId" parameterType="_int" resultType="korIT.kiosk.dto.ItemDTO">
-        select itemName from item where itemId=#{itemId}
+        select * from item where itemId=#{itemId}
     </select>
 
     <select id="findByItemName" parameterType="String" resultType="korIT.kiosk.dto.ItemDTO">

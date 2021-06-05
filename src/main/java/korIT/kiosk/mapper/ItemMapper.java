@@ -10,6 +10,10 @@ public interface ItemMapper {
 
     int insertItem(ItemDTO itemDTO);
 
+    void updateItem(ItemDTO itemDTO);
+
+    void deleteItem(int itemId);
+
     ItemDTO findByItemId(int itemId);
 
     ItemDTO findByItemName(String ItemName);
