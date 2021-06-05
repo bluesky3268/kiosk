@@ -1,22 +1,16 @@
 package korIT.kiosk.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import korIT.kiosk.dto.ItemDTO;
 import korIT.kiosk.dto.MemberDTO;
-import korIT.kiosk.dto.MemberLoginDTO;
+import korIT.kiosk.service.ItemService;
 import korIT.kiosk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +22,7 @@ import java.util.List;
 public class AdminController {
 
     private final MemberService memberService;
+    private final ItemService itemService;
 
     // 관리자용 메인페이지
     @GetMapping("/main")
@@ -43,7 +38,7 @@ public class AdminController {
 
     // 관리자 등록
     @PostMapping("/join")
-    public String join(MemberDTO memberDTO, @RequestParam("thumbImg")MultipartFile img) {
+    public String join(MemberDTO memberDTO, @RequestParam("shopImg") MultipartFile img) {
         log.info("[ memberDTO params : " + memberDTO + " ]" + "imageFile : " + img);
         memberService.join(memberDTO, img);
         log.info("등록 성공");
@@ -51,7 +46,7 @@ public class AdminController {
     }
 
     // 관리자 등록시 중복이름 체크
-    @PostMapping(value = "/duplicateCheck")
+    @PostMapping("/duplicateCheck")
     @ResponseBody
     public String duplicateCheck(@RequestBody HashMap<String, Object> shop) {
 
@@ -101,6 +96,7 @@ public class AdminController {
             return "redirect:/admin/login";
         }
     }
+
     // 매장 매니저용 페이지
     @GetMapping("/manager")
     public String manager() {
@@ -113,7 +109,7 @@ public class AdminController {
         return "administration/supervisor";
     }
 
-    //
+    // 매장 목록
     @GetMapping("/shopList")
     public String shopList(Model model) {
 
@@ -121,5 +117,36 @@ public class AdminController {
         model.addAttribute("managerList", managerList);
         log.info("managerList : " + managerList);
         return "administration/shopList";
+    }
+
+    // 상품 등록
+    @GetMapping("/itemAddForm")
+    public String itemAddForm(HttpSession session, Model model) {
+        String name = (String)session.getAttribute("name");
+        model.addAttribute("name", name);
+        return "administration/itemAdd";
+    }
+
+    @PostMapping("/itemAdd")
+    public String itemAdd(ItemDTO itemDTO, @RequestParam("item_img") MultipartFile img, HttpSession session) {
+
+        log.info("params itemDTO : " + itemDTO);
+        log.info("MultipartFile : " + img);
+
+        String name = (String)session.getAttribute("name");
+        MemberDTO findMember = memberService.findByUsername(name);
+        int id = findMember.getId();
+        itemDTO.setMemberId(id);
+
+        log.info("저장할 상품 : " + itemDTO + ", " + img);
+
+        itemService.insertItem(itemDTO, img);
+
+        return "redirect:/admin/itemList";
+    }
+
+    @GetMapping("/itemList")
+    public String itemList() {
+        return "administration/itemList";
     }
 }

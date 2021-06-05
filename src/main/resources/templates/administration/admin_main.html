@@ -35,12 +35,12 @@
 </head>
 <body>
 <div class="logout">
-    <th:block th:unless="${#strings.isEmpty(session.greeting)}">
-        <a id="logout" href="/admin/logout"><th:block th:text="${session.greeting} + ${session.role} + ' 로그아웃'"></th:block></a>
+    <th:block th:unless="${#strings.isEmpty(session.name)}">
+        <a id="logout" href="/admin/logout"><th:block th:text="${session.name} + ${session.role} + ' 로그아웃'"></th:block></a>
     </th:block>
 </div>
 <div class="login">
-    <th:block th:if="${#strings.isEmpty(session.greeting)}">
+    <th:block th:if="${#strings.isEmpty(session.name)}">
         <a id="login" href="/admin/loginForm">로그인</a>
     </th:block>
 </div>

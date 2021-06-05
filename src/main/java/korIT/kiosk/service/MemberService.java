@@ -1,7 +1,6 @@
 package korIT.kiosk.service;
 
 import korIT.kiosk.dto.MemberDTO;
-import korIT.kiosk.dto.MemberLoginDTO;
 import korIT.kiosk.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     // 이미지 파일 업로드 디렉토리 설정
-    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
+    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/shopImg";
 
 
     // 가게 이름 중복 확인
@@ -145,6 +144,11 @@ public class MemberService implements UserDetailsService {
     public List<MemberDTO> findByRole(String role) {
         List<MemberDTO> membersByRole = memberMapper.findByRole(role);
         return membersByRole;
+    }
+
+    public MemberDTO findByUsername(String username) {
+        MemberDTO member = memberMapper.findByUsername(username);
+        return member;
     }
 
 

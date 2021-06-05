@@ -27,7 +27,7 @@ class ItemServiceTest {
     @Transactional
     @Rollback(value=true)
     public void 아이템추가() {
-        ItemDTO itemDTO = new ItemDTO("국수", 3000, "이미지", "4");
+        ItemDTO itemDTO = new ItemDTO("국수", 3000, 4);
 
         itemMapper.insertItem(itemDTO);
 

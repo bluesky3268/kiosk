@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 등록 폼</title>
+    <meta contentType="application/json; charset=UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/join.css'>
+    <script src="/js/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<header>
+    상품등록
+</header>
+<section>
+    <div class="container">
+        <article>가게이름</article>
+        <div class="shopName" th:text="${name}" name="username"></div>
+        <form id="join" name="join" method="post" action="/admin/itemAdd" enctype="multipart/form-data">
+            <article>상품이름</article>
+            <article class="join_input"><input type="text" id="itemName" name="itemName" placeholder="상품 이름 입력"></article>
+            <article>가격</article>
+            <article class="join_input"><input type="text" id="price" name="price" placeholder="가격 입력"></article>
+            <article>품절여부</article>
+            <select name="isSoldOut">
+                <option value="false">판매중</option>
+                <option value="true">품절</option>
+            </select>
+
+            <article>상품 사진 업로드</article>
+            <div><input type="file" name="item_img" multiple="multiple"></div>
+            <br>
+            <button type="submit" id="join_btn">상품 등록</button>
+        </form>
+    </div>
+</section>
+
+</body>
+</html>

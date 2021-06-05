@@ -15,7 +15,7 @@ public class LoginSuccessController implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         HttpSession session = request.getSession();
-        session.setAttribute("greeting", authentication.getName());
+        session.setAttribute("name", authentication.getName());
         String role = String.valueOf(authentication.getAuthorities());
         session.setAttribute("role", role);
 
