@@ -75,7 +75,7 @@ public class AdminController {
     // 매장 매니저용 페이지
     @GetMapping("/manager")
     public String manager() {
-        return "administration/manager";
+        return "administration/manager/manager";
     }
 
     // 상품 등록
@@ -83,7 +83,7 @@ public class AdminController {
     public String itemAddForm(HttpSession session, Model model) {
         String name = (String) session.getAttribute("name");
         model.addAttribute("name", name);
-        return "administration/itemAdd";
+        return "administration/manager/itemAdd";
     }
 
     @PostMapping("/manager/itemAdd")
@@ -117,7 +117,7 @@ public class AdminController {
 
         model.addAttribute("username", username);
         model.addAttribute("itemList", itemList);
-        return "administration/itemList";
+        return "administration/manager/itemList";
     }
 
     // 상품 수정
@@ -133,12 +133,12 @@ public class AdminController {
         session.setAttribute("itemImg", findItem.getItemImg());
         model.addAttribute("username", username);
         model.addAttribute("item", findItem);
-        return "administration/itemEdit";
+        return "administration/manager/itemEdit";
     }
 
     @PostMapping("/manager/itemEdit/{id}")
     public String itemEdit(@PathVariable("id") int id, ItemDTO item, MultipartFile img, HttpSession session) {
-        String itemImg = (String)session.getAttribute("itemImg");
+        String itemImg = (String) session.getAttribute("itemImg");
         if (img == null) {
             item.setItemImg(itemImg);
         }
@@ -156,34 +156,30 @@ public class AdminController {
     @GetMapping("/manager/itemDelete/{id}")
     public String deleteItem(@PathVariable("id") int id) {
         itemService.deleteItem(id);
-        return "redirect:/admin/itemList";
+        return "redirect:/admin/manager/itemList";
     }
 
 
     /**
      * 푸드코트 슈퍼바이저 사용 페이지들
      */
-    @GetMapping("/supervisor")
-    public String supervisor() {
-        return "administration/supervisor";
-    }
 
     // 슈퍼바이저용 페이지
     @GetMapping("/supervisor/manageShop")
     public String manageShop_supervisor() {
-        return "administration/manageShop";
+        return "administration/supervisor/manageShop";
     }
 
     // 슈퍼바이저용 페이지
     @GetMapping("/supervisor/manageItem")
     public String manageItem_supervisor() {
-        return "administration/manageItem";
+        return "administration/supervisor/manageItem";
     }
 
     // 관리자 등록 폼 페이지
     @GetMapping("/supervisor/join")
     public String join() {
-        return "administration/join";
+        return "administration/supervisor/join";
     }
 
     // 관리자 등록
@@ -220,7 +216,11 @@ public class AdminController {
         List<MemberDTO> managerList = memberService.findByRole("ROLE_MANAGER");
         model.addAttribute("managerList", managerList);
         log.info("managerList : " + managerList);
-        return "administration/shopList";
+        return "administration/supervisor/shopList";
     }
 
+    @GetMapping("/supervisor/itemList/{id}")
+    public String itemList(@PathVariable("id") int id) {
+        return "administration/supervisor/itemList";
+    }
 }

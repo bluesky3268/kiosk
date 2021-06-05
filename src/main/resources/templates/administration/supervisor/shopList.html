@@ -21,7 +21,7 @@
   <tbody>
     <tr th:each="members : ${managerList}">
       <td th:text="${members.id}"></td>
-      <td><img th:src="@{/img/shopImg/}+${members.img}"></td>
+      <td><img th:src="@{/img/shopImg/}+${members.img}" th:onclick="|location.href='@{/admin/supervisor/itemList/{id}(id=${members.id})}'|"></td>
       <td th:text="${members.username}">가게명</td>
       <td th:text="${members.regDate}">입점일자</td>
       <td th:text="${members.location}">위치</td>
