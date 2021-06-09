@@ -121,23 +121,30 @@ public class AdminController {
     }
 
     // 상품 수정
-    @GetMapping("/manager/itemEdit/{id}")
+    @GetMapping({"/manager/itemEdit/{id}", "/supervisor/itemEdit/{id}"})
     public String itemEdit(@PathVariable("id") int id, Model model, HttpSession session) {
         String username = (String) session.getAttribute("name");
-        MemberDTO findShop = memberService.findByUsername(username);
 
         ItemDTO findItem = itemService.findByItemId(id);
 
         log.info("findItem : " + findItem);
 
-        session.setAttribute("itemImg", findItem.getItemImg());
-        model.addAttribute("username", username);
+        // 로그인한 사용자의 권한이 슈퍼바이져일 경우 슈퍼바이저의 이름이 상품 수정 폼의 가게 이름에 나타나게 되므로
+        // session에 저장해 놓은 role의 value가 [ROLE_SUPERVISOR]라면
+        // 수정할 상품에 해당하는 매장의 이름을 model에 추가해주고, 그렇지 않을 경우 session에 저장되어 있는 name을 그대로 사용한다.
+        if (session.getAttribute("role").equals("[ROLE_SUPERVISOR]")) {
+            MemberDTO findShop = memberService.findByMemberId(findItem.getMemberId());
+            model.addAttribute("username", findShop.getUsername());
+        }else{
+            model.addAttribute("username", username);
+        }
         model.addAttribute("item", findItem);
+        session.setAttribute("itemImg", findItem.getItemImg());
         return "administration/manager/itemEdit";
     }
 
     @PostMapping("/manager/itemEdit/{id}")
-    public String itemEdit(@PathVariable("id") int id, ItemDTO item, MultipartFile img, HttpSession session) {
+    public String itemEdit(@PathVariable("id") int itemId, ItemDTO item, MultipartFile img, HttpSession session) {
         String itemImg = (String) session.getAttribute("itemImg");
         if (img == null) {
             item.setItemImg(itemImg);
@@ -147,10 +154,13 @@ public class AdminController {
         MemberDTO findShop = memberService.findByUsername(username);
         item.setMemberId(findShop.getId());
 
-        item.setItemId(id);
+        item.setItemId(itemId);
 
         itemService.updateItem(item, img);
-        return "redirect:/admin/itemList";
+        if(session.getAttribute("role").equals("[ROLE_SUPERVISOR]")){
+            return "redirect:/admin/supervisor/itemList";
+        }
+        return "redirect:/admin/manager/itemList";
     }
 
     @GetMapping("/manager/itemDelete/{id}")
@@ -219,8 +229,36 @@ public class AdminController {
         return "administration/supervisor/shopList";
     }
 
-    @GetMapping("/supervisor/itemList/{id}")
-    public String itemList(@PathVariable("id") int id) {
+    @GetMapping("/supervisor/itemList")
+    public String itemList(Model model) {
+        List<MemberDTO> memberList = memberService.findByRole("ROLE_MANAGER");
+        log.info("memberList : " + memberList);
+        model.addAttribute("memberList", memberList);
         return "administration/supervisor/itemList";
     }
+
+    @GetMapping("/supervisor/itemList/detail")
+    public String itemListByShop(@RequestParam("member") int id, Model model) {
+        String memberId = String.valueOf(id);
+        MemberDTO member = memberService.findByMemberId(id);
+        log.info("member : " + member);
+
+        String username = member.getUsername();
+        List<ItemDTO> itemList = itemService.findItemsByMemberId(memberId);
+        model.addAttribute("username", username);
+        model.addAttribute("itemList", itemList);
+        return "administration/supervisor/itemListDetail";
+    }
+
+//    @GetMapping("/supervisor/itemEdit/{id}")
+//    public String itemEdit(@PathVariable("id") int id, Model model) {
+//        MemberDTO member = memberService.findByMemberId(id);
+//        log.info("member : " + member);
+//
+//        String username = member.getUsername();
+//        model.addAttribute("username", username);
+//
+//
+//        return "administration/manager/itemEdit";
+//    }
 }

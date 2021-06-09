@@ -68,12 +68,18 @@ select {
 button {
     width: 460px;
     height: 80px;
+    margin: 10px 0px;
     border: none;
     border-radius: 45px;
     color:white;
     background-color: cornflowerblue;
     cursor: pointer;
     font-size: 20px;
+}
+
+button a{
+    color: white;
+    text-decoration: none;
 }
 
 button.duplicateCheck{

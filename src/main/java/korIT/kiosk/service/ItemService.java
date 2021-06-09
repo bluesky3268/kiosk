@@ -58,6 +58,9 @@ public class ItemService {
         log.info(itemId + "번 상품 삭제 성공");
     }
 
+    /**
+     * update()에 사용하는 메서드
+     */
     // 이미지 파일 설정
     private void setImgFile(ItemDTO item, MultipartFile img) {
         String fileName = UUID.randomUUID().toString() + "."

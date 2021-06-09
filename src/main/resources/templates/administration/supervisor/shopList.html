@@ -7,6 +7,8 @@
     <title>매장목록</title>
 </head>
 <body>
+<a class="go_back" href="javascript:history.back(-1)">뒤로</a>
+<h3>[ 매장 목록 ]</h3>
 <table class="list">
   <thead>
     <tr>
@@ -21,7 +23,7 @@
   <tbody>
     <tr th:each="members : ${managerList}">
       <td th:text="${members.id}"></td>
-      <td><img th:src="@{/img/shopImg/}+${members.img}" th:onclick="|location.href='@{/admin/supervisor/itemList/{id}(id=${members.id})}'|"></td>
+      <td><img th:src="@{/img/shopImg/}+${members.img}" th:onclick="|location.href='@{/admin/supervisor/itemList/detail?member={id}(id=${members.id})}'|"></td>
       <td th:text="${members.username}">가게명</td>
       <td th:text="${members.regDate}">입점일자</td>
       <td th:text="${members.location}">위치</td>

@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/shop_list.css'>
+    <title>상품 조회</title>
 </head>
 <body>
-itemList for supervisor
+<a class="go_back" href="javascript:history.back(-1)">뒤로</a>
+<h3>[ 매장별 상품 보기 ]</h3>
+<form method="get" action="/admin/supervisor/itemList/detail">
+    <select name="member">
+        <option th:each="members : ${memberList}" th:text="${members.username}" th:value="${members.id}"></option>
+    </select>
+    <button type="submit">검색</button>
+</form>
+<h3>[ 전체 상품 보기 ]</h3>
+
 </body>
 </html>

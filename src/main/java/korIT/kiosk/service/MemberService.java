@@ -55,15 +55,9 @@ public class MemberService implements UserDetailsService {
         // 비밀번호 암호화
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         // 권한 설정
-        if(memberDTO.getRole().equals("manager")){
-            memberDTO.setRole("ROLE_MANAGER");
-        }else{
-            memberDTO.setRole("ROLE_SUPERVISOR");
-        }
+        checkRole(memberDTO);
         // 등록일자 설정
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String format = sdf.format(timestamp);
+        String format = getDate();
         memberDTO.setRegDate(format);
 
         log.info("join_memberDTO : " + memberDTO);
@@ -74,6 +68,39 @@ public class MemberService implements UserDetailsService {
     public void join(MemberDTO member, MultipartFile img) {
 
         // 이미지 파일 설정
+        String fileName = setImgFile(img);
+        member.setImg(fileName);
+        // 비밀번호 암호화
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        // 권한 설정
+        checkRole(member);
+        // 등록일자 설정
+        String format = getDate();
+        member.setRegDate(format);
+
+        log.info("join_memberDTO : " + member);
+        memberMapper.insertMember(member);
+    }
+
+    /**
+     * join()에 사용하는 메서드
+     */
+    // 권한 확인 후 설정
+    private void checkRole(MemberDTO member) {
+        if (member.getRole().equals("manager")) {
+            member.setRole("ROLE_MANAGER");
+        } else {
+            member.setRole("ROLE_SUPERVISOR");
+        }
+    }
+    // 날짜 설정
+    private String getDate() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(timestamp);
+    }
+    // 이미지 파일 설정
+    private String setImgFile(MultipartFile img) {
         String fileName = UUID.randomUUID().toString() + "."
                 + img.getOriginalFilename().substring(img.getOriginalFilename().indexOf(".") + 1);
         log.info("img.getOriginalFilename : " + img.getOriginalFilename());
@@ -83,32 +110,59 @@ public class MemberService implements UserDetailsService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        member.setImg(fileName);
-
-
-        // 비밀번호 암호화
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
-        // 권한 설정
-        if(member.getRole().equals("manager")){
-            member.setRole("ROLE_MANAGER");
-        }else{
-            member.setRole("ROLE_SUPERVISOR");
-        }
-        // 등록일자 설정
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String format = sdf.format(timestamp);
-        member.setRegDate(format);
-
-        log.info("join_memberDTO : " + member);
-        memberMapper.insertMember(member);
+        return fileName;
     }
 
-    // 가게 리스트
+    /**
+     * 조회
+     */
+    // 매장 리스트 조회
     public List<MemberDTO> getMemberList() {
         List<MemberDTO> members = memberMapper.findMembers();
         return members;
     }
+
+    // 권한 조회
+    public String findRole(String shop) {
+        MemberDTO member = memberMapper.findByUsername(shop);
+        return member.getRole();
+
+    }
+
+    public List<MemberDTO> findByRole(String role) {
+        List<MemberDTO> membersByRole = memberMapper.findByRole(role);
+        return membersByRole;
+    }
+
+    public MemberDTO findByUsername(String username) {
+        MemberDTO member = memberMapper.findByUsername(username);
+        return member;
+    }
+
+    public MemberDTO findByMemberId(int memberId) {
+        MemberDTO member = memberMapper.findByMemberId(memberId);
+        return member;
+    }
+
+
+    // Security Session -> Authentication -> UserDetails(PrincipalDetails)
+    // 값이 Authentication으로 리턴된다.
+    // 그리고 Security session에는 Authentication이 저장된다.
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("param login shopName : " + username);
+        MemberDTO member = memberMapper.findByUsername(username);
+
+        log.info("login member : " + member);
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(member.getRole()));
+
+        log.info("login member _ role" + authorities);
+
+        return new User(member.getUsername(), member.getPassword(), authorities);
+    }
+
 
 //    // 로그인
 //    public String login(MemberLoginDTO loginDTO) {
@@ -133,42 +187,5 @@ public class MemberService implements UserDetailsService {
 //            return "2";
 //        }
 //    }
-
-    // 권한 조회
-    public String findRole(String shop) {
-        MemberDTO member = memberMapper.findByUsername(shop);
-        return member.getRole();
-
-    }
-
-    public List<MemberDTO> findByRole(String role) {
-        List<MemberDTO> membersByRole = memberMapper.findByRole(role);
-        return membersByRole;
-    }
-
-    public MemberDTO findByUsername(String username) {
-        MemberDTO member = memberMapper.findByUsername(username);
-        return member;
-    }
-
-
-    // Security Session -> Authentication -> UserDetails(PrincipalDetails)
-    // 값이 Authentication으로 리턴된다.
-    // 그리고 Security session에는 Authentication이 저장된다.
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("param login shopName : " + username);
-        MemberDTO member = memberMapper.findByUsername(username);
-
-        log.info("login member : " + member);
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(member.getRole()));
-
-        log.info("login member _ role" + authorities);
-
-        return new User(member.getUsername(), member.getPassword(), authorities);
-    }
-
 
 }
