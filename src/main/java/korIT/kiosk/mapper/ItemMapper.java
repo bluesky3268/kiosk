@@ -1,5 +1,6 @@
 package korIT.kiosk.mapper;
 
+import korIT.kiosk.dto.Criteria;
 import korIT.kiosk.dto.ItemDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,13 +23,16 @@ public interface ItemMapper {
 
     List<ItemDTO> findItems();
 
-    int checkSaleStatus(int itemId);
 
-    int changeToSoldOut(int itemId);
+    // 페이징 처리 메서드
 
-    int changeToForSale(int itemId);
+    List<ItemDTO> getItemListWithPaging(Criteria criteria);
 
+    int countItems(String memberId);
 
+    List<ItemDTO> getItemList();
+
+    int getItemListCnt();
 
 
 }

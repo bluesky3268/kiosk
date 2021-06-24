@@ -25,7 +25,20 @@
         select * from member
     </select>
 
+    <select id="findManagersWithPaging" resultType="korIT.kiosk.dto.MemberDTO">
+        select list.* from (
+           select @rownum := @rownum + 1 as no, A.* from (
+               select *
+               from member,(select @rownum:=0)a
+               where role = #{role}
+               order by regDate desc
+               )A
+       ) list
+        where no between #{pageNum} * #{amount} -4 and #{pageNum} * #{amount};
+    </select>
 
-
+    <select id="countManagers" resultType="_int">
+        select count(*) from member where role=#{role}
+    </select>
 
 </mapper>

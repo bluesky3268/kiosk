@@ -8,6 +8,7 @@
 </head>
 <body>
 <a class="go_back" href="javascript:history.back(-1)">뒤로</a>
+<a class="go_back" href="/admin/main">홈</a>
 <h3>[ 상품 목록 ]</h3>
 <table class="list">
     <div>
@@ -24,7 +25,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="itemList : ${itemList}">
+    <tr th:each="itemList : ${list}">
         <td th:text="${itemList.itemId}">상품번호</td>
         <td th:text="${itemList.itemName}">위치</td>
         <td><img th:src="@{/img/itemImg/}+${itemList.itemImg}" th:onclick="|location.href='@{/admin/supervisor/itemEdit/{id}(id=${itemList.itemId})}'|"></td>
@@ -38,5 +39,30 @@
     </tr>
     </tbody>
 </table>
+<div class="paging">
+    <ul>
+        <li class="paginate_button previous" th:if="${pageMaker.prev}">
+            <a th:href="@{/admin/manager/itemList?pageNum={startPage}(startPage=${pageMaker.getStartPage()}-1)}">이전</a>
+        </li>
+        <li class="paginate_button" th:each="num:${#numbers.sequence(pageMaker.getStartPage(), pageMaker.endPage)}">
+            <a th:href="@{/admin/manager/itemList?pageNum={num} (num=${num})}"><th:block th:text="${num}"></th:block></a>
+        </li>
+        <li class="paginate_button next" th:if="${pageMaker.next}">
+            <a th:href="@{/admin/manager/itemList?pageNum={endPage}(endPage=${pageMaker.getEndPage()}+1)}">다음</a>
+        </li>
+    </ul>
+    <form id="actionForm" action="/admin/manager/itemList" method="get">
+        <input type="hidden" name="pageNum" th:value="${pageMaker.cri.getPageNum()}">
+        <input type="hidden" name="amount" th:value="${pageMaker.cri.getAmount()}">
+        <input type="hidden" name="memberId" th:value="${pageMaker.cri.getMemberId()}">
+    </form>
+</div>
+<script type="text/javascript">
+    $(".paginate_button a").on("click", function (e) {
+        e.preventDefault();
+        $("#actionForm").find("input[name=pageNum]").val($(this)).attr("th:href");
+        $("#actionForm").submit();
+    });
+</script>
 </body>
 </html>

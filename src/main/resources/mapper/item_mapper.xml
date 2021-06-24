@@ -46,6 +46,33 @@
     </update>
 
 
+    <!-- 페이징 처리 할 때 사용할 쿼리문   -->
+
+    <select id="getItemListWithPaging" resultType="korIT.kiosk.dto.ItemDTO">
+        select list.* from (
+            select @rownum := @rownum + 1 as no, A.* from (
+                select *
+                from item,(select @rownum:=0)a
+                where memberId = #{memberId}
+                order by itemId desc
+            )A
+        ) list
+        where no between #{pageNum} * #{amount} -4 and #{pageNum} * #{amount};
+    </select>
+
+    <select id="countItems" resultType="_int">
+        select count(*) from item where memberId=#{memberId}
+    </select>
+
+
+    <select id="getItemList" parameterType="String" resultType="korIT.kiosk.dto.ItemDTO">
+        select * from item where memberId = #{memberId} limit #{startList}, #{listSize}
+    </select>
+
+    <select id="getItemListCnt" resultType="korIT.kiosk.dto.ItemDTO">
+        select count(*) as listCnt from item where memberId = #{memberId}
+    </select>
+
 
 
 </mapper>

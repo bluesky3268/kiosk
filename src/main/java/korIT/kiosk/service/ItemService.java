@@ -1,5 +1,6 @@
 package korIT.kiosk.service;
 
+import korIT.kiosk.dto.Criteria;
 import korIT.kiosk.dto.ItemDTO;
 import korIT.kiosk.mapper.ItemMapper;
 import lombok.RequiredArgsConstructor;
@@ -93,24 +94,36 @@ public class ItemService {
 
     // 가게별 상품 조회
     public List<ItemDTO> findItemsByMemberId(String memberId) {
-        List<ItemDTO> itemList = itemMapper.findItemsByMemberId(memberId);
-        return itemList;
+        return itemMapper.findItemsByMemberId(memberId);
     }
 
-
     public ItemDTO findByItemName(String itemName) {
-        ItemDTO findItem = itemMapper.findByItemName(itemName);
-        return findItem;
+        return itemMapper.findByItemName(itemName);
     }
 
     public ItemDTO findByItemId(int itemId) {
-        ItemDTO findItem = itemMapper.findByItemId(itemId);
-        return findItem;
+        return itemMapper.findByItemId(itemId);
     }
 
     public List<ItemDTO> findItems() {
-        List<ItemDTO> items = itemMapper.findItems();
-        return items;
+        return itemMapper.findItems();
+    }
+
+    // 페이징 처리
+    public List<ItemDTO> getItemListWithPaging(Criteria criteria) {
+        return itemMapper.getItemListWithPaging(criteria);
+    }
+
+    public int countItems(String memberId) {
+        return itemMapper.countItems(memberId);
+    }
+
+    public int getItemListCnt() {
+        return itemMapper.getItemListCnt();
+    }
+
+    public List<ItemDTO> getItemList(String memberId) {
+        return itemMapper.getItemList();
     }
 
 }

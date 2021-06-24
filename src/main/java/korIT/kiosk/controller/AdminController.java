@@ -1,7 +1,9 @@
 package korIT.kiosk.controller;
 
+import korIT.kiosk.dto.Criteria;
 import korIT.kiosk.dto.ItemDTO;
 import korIT.kiosk.dto.MemberDTO;
+import korIT.kiosk.dto.PageDTO;
 import korIT.kiosk.service.ItemService;
 import korIT.kiosk.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -101,22 +103,37 @@ public class AdminController {
 
         itemService.insertItem(itemDTO, img);
 
-        return "redirect:/admin/itemList";
+        log.info("상품등록 완료!");
+
+        return "redirect:/admin/manager/itemList";
     }
 
     // 상품 목록
     @GetMapping("/manager/itemList")
-    public String itemList(Model model, HttpSession session) {
+    public String itemList(Criteria cri, Model model, HttpSession session) {
 
+        // 세션에서 해당 매장 아이디 가져와서 id값으로 상품 검색
         String username = (String) session.getAttribute("name");
         MemberDTO findShop = memberService.findByUsername(username);
-        String findShopId = String.valueOf(findShop.getId());
-        List<ItemDTO> itemList = itemService.findItemsByMemberId(findShopId);
+        String memberId = String.valueOf(findShop.getId());
+        cri.setMemberId(memberId);
 
-        log.info("itemList : " + itemList);
+        log.info("username : " + username);
+        log.info("memberId : " + memberId);
+        log.info("parameter cri : " + cri);
+
+        List<ItemDTO> itemListWithPaging = itemService.getItemListWithPaging(cri);
+
+        PageDTO pageMaker = new PageDTO(cri, 123);
 
         model.addAttribute("username", username);
-        model.addAttribute("itemList", itemList);
+        model.addAttribute("memberId", memberId);
+        model.addAttribute("list", itemListWithPaging);
+        model.addAttribute("pageMaker", pageMaker);
+        log.info("pages : " + pageMaker);
+
+
+
         return "administration/manager/itemList";
     }
 
@@ -221,44 +238,55 @@ public class AdminController {
 
     // 매장 목록
     @GetMapping("/supervisor/shopList")
-    public String shopList(Model model) {
+    public String shopList(Model model, Criteria cri) {
 
-        List<MemberDTO> managerList = memberService.findByRole("ROLE_MANAGER");
-        model.addAttribute("managerList", managerList);
-        log.info("managerList : " + managerList);
+        cri.setRole("ROLE_MANAGER");
+        List<MemberDTO> managers = memberService.findManagersWithPaging(cri);
+        log.info("cri_parameter : " + cri);
+        log.info("memberList : " + managers);
+
+        int countManager = memberService.countManagers("ROLE_MANAGER");
+        log.info("countManager : " + countManager);
+
+        PageDTO pageMaker = new PageDTO(cri, countManager);
+        log.info("startPage : " +  pageMaker.getStartPage() + ", endPage : " + pageMaker.getEndPage() + ", pageNum : " + cri.getPageNum());
+
+        model.addAttribute("managerList", managers);
+        model.addAttribute("pageMaker", pageMaker);
         return "administration/supervisor/shopList";
     }
 
     @GetMapping("/supervisor/itemList")
     public String itemList(Model model) {
         List<MemberDTO> memberList = memberService.findByRole("ROLE_MANAGER");
-        log.info("memberList : " + memberList);
+
+
         model.addAttribute("memberList", memberList);
+
         return "administration/supervisor/itemList";
     }
 
     @GetMapping("/supervisor/itemList/detail")
-    public String itemListByShop(@RequestParam("member") int id, Model model) {
+    public String itemListByShop(@RequestParam("member") int id, Model model, Criteria cri) {
         String memberId = String.valueOf(id);
         MemberDTO member = memberService.findByMemberId(id);
         log.info("member : " + member);
 
+
+        cri.setMemberId(memberId);
+        List<ItemDTO> itemList = itemService.getItemListWithPaging(cri);
+        log.info("itemList" + itemList);
+
+        int countItems = itemService.countItems(memberId);
+
+        PageDTO pageMaker = new PageDTO(cri, countItems);
+
+
         String username = member.getUsername();
-        List<ItemDTO> itemList = itemService.findItemsByMemberId(memberId);
         model.addAttribute("username", username);
         model.addAttribute("itemList", itemList);
+        model.addAttribute("pageMaker", pageMaker);
         return "administration/supervisor/itemListDetail";
     }
 
-//    @GetMapping("/supervisor/itemEdit/{id}")
-//    public String itemEdit(@PathVariable("id") int id, Model model) {
-//        MemberDTO member = memberService.findByMemberId(id);
-//        log.info("member : " + member);
-//
-//        String username = member.getUsername();
-//        model.addAttribute("username", username);
-//
-//
-//        return "administration/manager/itemEdit";
-//    }
 }

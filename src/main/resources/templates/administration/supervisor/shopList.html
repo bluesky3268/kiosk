@@ -8,6 +8,7 @@
 </head>
 <body>
 <a class="go_back" href="javascript:history.back(-1)">뒤로</a>
+<a class="go_back" href="/admin/main">홈</a>
 <h3>[ 매장 목록 ]</h3>
 <table class="list">
   <thead>
@@ -28,9 +29,54 @@
       <td th:text="${members.regDate}">입점일자</td>
       <td th:text="${members.location}">위치</td>
       <td th:text="${members.role}">권한</td>
-
     </tr>
   </tbody>
 </table>
+<div class="paging">
+  <ul>
+    <li class="paginate_button previous">
+      <a id="paginate_button_previous_a" th:if="${pageMaker.prev}"
+         th:href="@{/admin/supervisor/shopList?pageNum={startPage}(startPage=${pageMaker.getStartPage()}-1)}">이전</a>
+    </li>
+    <li class="paginate_button" th:each="num:${#numbers.sequence(pageMaker.getStartPage(), pageMaker.getEndPage())}">
+      <a th:href="@{/admin/supervisor/shopList?pageNum={num} (num=${num})}"><th:block th:text="${num}"></th:block></a>
+    </li>
+    <li class="paginate_button next" th:if="${pageMaker.next}">
+      <a class="paginate_button_next_a" th:href="@{/admin/supervisor/shopList?pageNum={endPage}(endPage=${pageMaker.getEndPage()}+1)}">다음</a>
+    </li>
+  </ul>
+
+  <form id="actionForm" action="/admin/supervisor/shopList" method="get">
+    <input type="hidden" name="pageNum" th:value="${pageMaker.cri.getPageNum()}">
+    <input type="hidden" name="amount" th:value="${pageMaker.cri.getAmount()}">
+    <input type="hidden" name="memberId" th:value="${pageMaker.cri.getRole()}">
+  </form>
+</div>
+<script type="text/javascript">
+  $(".paginate_button a").on("click", function (e) {
+    e.preventDefault();
+    $("#actionForm").find('input[name=pageNum]').val($(this)).attr("th:href");
+    $("#actionForm").submit();
+  });
+
+  // $(function(){
+  //   $(".paginate_button_previous_a").click(function(){
+  //       var check_previous = $('${pageMaker.prev}');
+  //       if(check_previous == false){
+  //           alert("이전 페이지가 없습니다.");
+  //           return false;
+  //       }
+  //   })
+  // })
+  // $(function(){
+  //   $(".paginate_button_next_a").click(function(){
+  //       var check_next= $('${pageMaker.next}');
+  //       if(check_next == false){
+  //           alert("다음 페이지가 없습니다.");
+  //           return false;
+  //       }
+  //   })
+  // })
+</script>
 </body>
 </html>

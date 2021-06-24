@@ -1,5 +1,6 @@
 package korIT.kiosk.mapper;
 
+import korIT.kiosk.dto.Criteria;
 import korIT.kiosk.dto.MemberDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,5 +18,10 @@ public interface MemberMapper {
      List<MemberDTO> findByRole(String role);
 
      List<MemberDTO> findMembers();
+
+     // 페이징처리
+     List<MemberDTO> findManagersWithPaging(Criteria criteria);
+
+     int countManagers(String role);
 
 }

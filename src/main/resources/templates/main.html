@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Main</title>
@@ -11,56 +11,60 @@
 </header>
 <nav>
     <ul>
-        <li><a href="#">사보텐</a></li>
+        <li class="arrow"><a href="#">[ < ]</a></li>
+        <li th:each="member:${memberList}"><a href="#" th:text="${member.getUsername}"></a></li>
         <li><a href="#">스시앤</a></li>
         <li><a href="#">아비꼬</a></li>
         <li><a href="#">청년다방</a></li>
+        <li class="arrow"><a href="#"> [ > ] </a></li>
     </ul>
 </nav>
-<div class="container">
+<div class="container_menu">
     <section>
-        <article>
-            <h3 class="h3Title"><a href="#">음식1이미지</a></h3>
-            <div class = "cook">음식이름</div>
-            9,000원
+        <article th:each="item:${itemList}">
+            <div class="menu_img"><img img th:src="@{/img/itemImg/}+${item.getItemImg}"></div>
+            <div class="menu_title"><th:block th:text="${item.getItemName()}">음식이름</th:block></div>
+            <div class="price"><th:block th:text="${item.getPrice()} + 원">9,000원</th:block></div>
         </article>
         <article>
-            <h3 class="h3Title"><a href="#">음식2</a></h3>
+            <div class="menu_img"><a href="#">음식이미지</a></div>
+            <div class="menu_title">음식이름</div>
+            <div class="price">9,000원</div>
         </article>
         <article>
-            <h3 class="h3Title"><a href="#">음식3</a></h3>
+            <div class="menu_img"><a href="#">음식이미지</a></div>
+            <div class="menu_title">음식이름</div>
+            <div class="price">9,000원</div>
         </article>
         <article>
-            <h3 class="h3Title"><a href="#">스시엔</a></h3>
+            <div class="menu_img"><a href="#">음식이미지</a></div>
+            <div class="menu_title">음식이름</div>
+            <div class="price">9,000원</div>
         </article>
         <article>
-            <h3 class="h3Title"><a href="#"> </a></h3>
+            <div class="menu_img"><a href="#">음식이미지</a></div>
+            <div class="menu_title">음식이름</div>
+            <div class="price">9,000원</div>
         </article>
         <article>
-            <h3 class="h3Title"><a href="#"> </a></h3>
+            <div class="menu_img"><a href="#">음식이미지</a></div>
+            <div class="menu_title">음식이름</div>
+            <div class="price">9,000원</div>
         </article>
         <article>
-            <h3 class="h3Title"><a href="#"> </a></h3>
-        </article>
-        <article>
-            <h3 class="h3Title"><a href="#"> </a></h3>
-        </article>
-        <article>
-            <h3 class="h3Title"><a href="#"> </a></h3>
+            <div class="menu_img"><a href="#">음식이미지</a></div>
+            <div class="menu_title">음식이름</div>
+            <div class="price">9,000원</div>
         </article>
     </section>
 </div>
-<footer>
-    <article class="weather_widget">
-
-    </article>
-    <!--     <article class="ordered_menu">
+<div class="container_info">
+   <article class="ordered_menu">
             주문내역:
-
         </article>
-        <article class="bill">
+        <article class="pay_price">
             결제금액:
-        </article> -->
-</footer>
+        </article>
+</div>
 </body>
 </html>

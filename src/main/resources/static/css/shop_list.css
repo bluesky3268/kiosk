@@ -5,12 +5,13 @@
 
 a {
     display: inline-block;
+    list-style-type: none;
     margin: 10px 10px;
     padding-top: 30px;
-    width: 460px;
+    width: 100px;
     height: 60px;
     border: none;
-    border-radius: 45px;
+    border-radius: 15%;
     color: white;
     background-color: cornflowerblue;
     cursor: pointer;
@@ -22,42 +23,34 @@ a {
 h3{
     margin: 20px;
 }
+
 table{
     margin : 20px 20px;
     border: 1px solid #454545;
     border-collapse: collapse;
-    width:80%;
+    width:1100px;
 }
 table tr, th, td{
     border: 1px solid #454545;
     padding: 10px;
     text-align:center;
 }
-table thead{
-    font-weight: bold;
-}
+
 table thead th{
+    font-weight: bold;
     width: 30px;
     height: 50px;
 }
 
-
 table thead th.img{
-    width:150px;
+    width:220px;
     height: 60px;
-}
-td.img{
-    width:150px;
-    height: 60px;
-}
-td .img .img_a{
-    background-color: white;
 }
 
-table img{
-    width: 150px;
-    height: 60px;
-    object-fit: scale-down;
+img{
+    width: 250px;
+    height: 150px;
+    object-fit: cover;
     cursor: pointer;
 }
 
@@ -71,4 +64,28 @@ form{
     width: 60px;
     height: 30px;
     font-size: 15px;
+}
+.paging{
+    width: 1200px;
+}
+
+.paging ul{
+    margin : 0px 120px;
+}
+.paginate_button{
+    display: inline-block;
+    text-align: center;
+}
+
+form {
+    width: 500px;
+    height: 100px;
+}
+form select{
+    width: 120px;
+    height: 30px;
+}
+form button {
+    width: 60px;
+    height: 30px;
 }

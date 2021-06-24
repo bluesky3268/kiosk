@@ -1,5 +1,6 @@
 package korIT.kiosk.service;
 
+import korIT.kiosk.dto.Criteria;
 import korIT.kiosk.dto.MemberDTO;
 import korIT.kiosk.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +97,7 @@ public class MemberService implements UserDetailsService {
     // 날짜 설정
     private String getDate() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return sdf.format(timestamp);
     }
     // 이미지 파일 설정
@@ -161,6 +162,15 @@ public class MemberService implements UserDetailsService {
         log.info("login member _ role" + authorities);
 
         return new User(member.getUsername(), member.getPassword(), authorities);
+    }
+
+    // 페이징 처리
+    public List<MemberDTO> findManagersWithPaging(Criteria cri) {
+       return memberMapper.findManagersWithPaging(cri);
+    }
+
+    public int countManagers(String role) {
+        return memberMapper.countManagers(role);
     }
 
 
